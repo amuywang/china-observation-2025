@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2025 中國觀測報告 互動版</title>
+<meta name="description" content="想想論壇《2025 中國觀測報告》互動式閱讀版：經濟、金融、財政、社會、政治五大面向與 50 項觀測指標。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f6f3ee; --surface:#fffdf9; --surface-2:#efeae1; --ink:#1d1b18; --ink-2:#55504a; --ink-3:#8a847b;
+  --line:#ddd6ca; --accent:#b5352b; --accent-soft:#f3dcd8;
+  --c1:#b5352b; --c2:#1f4e79; --c3:#c08a1e; --c4:#3f7d6b; --cold:#2f6690; --hot:#b5352b;
+  --shadow:0 1px 2px rgba(40,30,20,.06),0 8px 24px rgba(40,30,20,.06);
+  --serif:"Noto Serif TC","Songti TC",serif; --sans:"Noto Sans TC",system-ui,-apple-system,"PingFang TC",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14130f; --surface:#1c1a16; --surface-2:#25221d; --ink:#f0ebe3; --ink-2:#b9b2a7; --ink-3:#827b70;
+    --line:#37332c; --accent:#e5675b; --accent-soft:#3a1f1c;
+    --c1:#e5675b; --c2:#6fa6d6; --c3:#e0b04f; --c4:#6fbba3; --cold:#6fa6d6; --hot:#e5675b;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14130f; --surface:#1c1a16; --surface-2:#25221d; --ink:#f0ebe3; --ink-2:#b9b2a7; --ink-3:#827b70;
+  --line:#37332c; --accent:#e5675b; --accent-soft:#3a1f1c;
+  --c1:#e5675b; --c2:#6fa6d6; --c3:#e0b04f; --c4:#6fbba3; --cold:#6fa6d6; --hot:#e5675b;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.85;font-size:16.5px;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:var(--serif);line-height:1.3;margin:0}
+
+/* nav */
+#nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+#nav .wrap{display:flex;align-items:center;gap:6px;height:56px}
+#nav .brand{font-family:var(--serif);font-weight:900;margin-right:auto;white-space:nowrap;font-size:15px}
+#nav .brand b{color:var(--accent)}
+#nav nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+#nav nav a{padding:6px 11px;border-radius:99px;text-decoration:none;font-size:14px;color:var(--ink-2);white-space:nowrap;transition:.2s}
+#nav nav a:hover{background:var(--surface-2)}
+#nav nav a.on{background:var(--ink);color:var(--bg)}
+#theme{border:1px solid var(--line);background:var(--surface);color:var(--ink);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:15px;flex:none}
+#prog{position:absolute;left:0;bottom:-1px;height:2px;background:var(--accent);width:0}
+@media(max-width:760px){#nav .brand{display:none}}
+
+/* hero */
+.hero{padding:72px 0 40px}
+.eyebrow{font-size:13px;letter-spacing:.18em;color:var(--accent);font-weight:700}
+.hero h1{font-size:clamp(38px,7vw,76px);font-weight:900;margin:14px 0 18px;letter-spacing:-.01em}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p.lead{font-size:clamp(17px,2.2vw,21px);max-width:36em;color:var(--ink-2);margin:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:44px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;box-shadow:var(--shadow)}
+.kpi .n{font-family:var(--serif);font-weight:900;font-size:38px;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .n small{font-size:.5em;font-weight:600;margin-left:2px;color:var(--ink-2)}
+.kpi .l{font-size:13.5px;color:var(--ink-2);margin-top:6px;line-height:1.5}
+.kpi.red .n{color:var(--accent)}
+
+/* sections */
+section{padding:64px 0 24px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+.sec-no{font-family:var(--serif);font-weight:900;color:var(--accent);font-size:15px;letter-spacing:.1em}
+.sec-head h2{font-size:clamp(28px,4.4vw,44px);font-weight:900}
+.byline{font-size:13.5px;color:var(--ink-3)}
+.verdict{font-family:var(--serif);font-size:clamp(19px,2.6vw,25px);font-weight:600;line-height:1.55;max-width:34em;margin:14px 0 28px;padding-left:16px;border-left:4px solid var(--accent)}
+.prose{max-width:40em;color:var(--ink-2)}
+.prose p{margin:0 0 1em}
+.prose strong{color:var(--ink)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.card h3{font-size:20px;margin-bottom:4px}
+.card .sub{font-size:13.5px;color:var(--ink-3);margin:0 0 14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+.stack>*+*{margin-top:16px}
+.note{font-size:12.5px;color:var(--ink-3);margin-top:10px;line-height:1.6}
+.chartbox{position:relative;height:300px}
+.chartbox.tall{height:380px}
+
+/* tabs / chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink-2);padding:5px 13px;border-radius:99px;font:inherit;font-size:13.5px;cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--ink-3)}
+.chip[aria-pressed="true"],.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+
+/* stat wall */
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.st{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;transition:.25s}
+.st.hide{display:none}
+.st .v{font-family:var(--serif);font-weight:900;font-size:28px;line-height:1.15;font-variant-numeric:tabular-nums}
+.st.cold .v{color:var(--cold)} .st.hot .v{color:var(--hot)}
+.st .t{font-size:14px;margin-top:4px;color:var(--ink)}
+.st .d{font-size:12.5px;color:var(--ink-3);line-height:1.5;margin-top:2px}
+
+/* accordion */
+details{border-top:1px solid var(--line)}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;list-style:none;padding:16px 4px;display:flex;gap:12px;align-items:center;font-family:var(--serif);font-weight:600;font-size:18px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";margin-left:auto;font-family:var(--sans);font-size:22px;color:var(--ink-3);transition:.2s}
+details[open] summary::after{content:"–"}
+summary .k{font-family:var(--sans);font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.08em;flex:none}
+details .body{padding:0 4px 20px;color:var(--ink-2);max-width:42em}
+details .body p{margin:0 0 .9em}
+details .body ul{margin:0 0 .9em;padding-left:1.2em}
+details .body li{margin:.25em 0}
+details .body strong{color:var(--ink)}
+
+/* before-after */
+.ba{display:grid;gap:14px}
+.ba-row .lab{display:flex;justify-content:space-between;font-size:14px;margin-bottom:5px}
+.ba-row .lab span:last-child{color:var(--ink-3);font-variant-numeric:tabular-nums}
+.ba-track{position:relative;height:10px;background:var(--surface-2);border-radius:99px}
+.ba-seg{position:absolute;top:0;height:100%;border-radius:99px;background:var(--accent-soft);border:1px solid var(--accent)}
+.ba-pt{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;transform:translate(-50%,-50%);border:3px solid var(--surface)}
+.ba-pt.a{background:var(--ink-3)} .ba-pt.b{background:var(--accent)}
+
+/* flow */
+.flow{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+.step{flex:1 1 150px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 14px;cursor:pointer;text-align:left;font:inherit;color:inherit;position:relative;transition:.2s}
+.step:hover{border-color:var(--ink-3)}
+.step.on{border-color:var(--accent);background:var(--accent-soft)}
+.step b{display:block;font-size:12px;color:var(--accent);letter-spacing:.1em}
+.step span{font-size:14.5px;font-weight:500}
+.flow-detail{margin-top:12px;padding:14px 16px;background:var(--surface-2);border-radius:12px;font-size:15px;color:var(--ink-2);min-height:4.5em}
+
+/* range bars */
+.rng{margin:10px 0 18px}
+.rng .lab{font-size:14px;display:flex;justify-content:space-between;margin-bottom:6px}
+.rng .bar{position:relative;height:26px;background:var(--surface-2);border-radius:8px;overflow:hidden}
+.rng .fill{position:absolute;top:0;bottom:0;border-radius:8px;display:flex;align-items:center;padding:0 10px;font-size:12.5px;font-weight:700;color:#fff;white-space:nowrap}
+
+/* table */
+.tbl{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line)}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl th{font-weight:500;color:var(--ink-3);font-size:12.5px}
+.tbl tr.hl td{background:var(--accent-soft);font-weight:700}
+.scroll-x{overflow-x:auto}
+
+/* people table */
+.ppl{display:grid;gap:8px}
+.ppl-row{display:grid;grid-template-columns:130px 1fr;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+.ppl-row .ty{color:var(--ink-3);font-size:13px}
+.ppl-row .nm{display:flex;flex-wrap:wrap;gap:5px}
+.tag{background:var(--surface-2);padding:1px 9px;border-radius:6px;font-size:13.5px}
+.tag.n{background:var(--accent);color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+@media(max-width:600px){.ppl-row{grid-template-columns:1fr;gap:4px}}
+
+/* four conflicts */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.pane{display:none;color:var(--ink-2);max-width:42em}
+.pane.on{display:block}
+.pane p{margin:0 0 .9em}
+
+/* explorer */
+.search{width:100%;padding:11px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;margin-bottom:12px}
+.search:focus{outline:2px solid var(--accent);outline-offset:1px}
+.ind-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:6px}
+.ind-list li{display:flex;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:14.5px;line-height:1.5;align-items:baseline}
+.ind-list .no{font-family:var(--serif);font-weight:900;color:var(--ink-3);min-width:1.8em;font-variant-numeric:tabular-nums}
+.ind-list .tg{margin-left:auto;font-size:11.5px;color:var(--ink-3);white-space:nowrap}
+.ind-list li[data-d="0"] .no{color:var(--c2)} .ind-list li[data-d="1"] .no{color:var(--c3)} .ind-list li[data-d="2"] .no{color:var(--c4)} .ind-list li[data-d="3"] .no{color:var(--c1)} .ind-list li[data-d="4"] .no{color:var(--ink)}
+
+/* summary cards */
+.sumgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.sumcard{text-align:left;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;transition:.2s;text-decoration:none;display:block}
+.sumcard:hover{transform:translateY(-3px);border-color:var(--accent)}
+.sumcard .no{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.1em}
+.sumcard h3{font-size:22px;margin:2px 0 6px}
+.sumcard p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.65}
+
+.watch{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.watch .card h3{font-size:18px}
+.watch .card p{margin:6px 0 0;font-size:14.5px;color:var(--ink-2)}
+footer{margin-top:80px;border-top:1px solid var(--line);padding:32px 0 60px;font-size:13px;color:var(--ink-3)}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .6s,transform .6s}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+.btn-top{position:fixed;right:18px;bottom:18px;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s;font-size:16px}
+.btn-top.on{opacity:1;pointer-events:auto}
+</style>
+</head>
+<body>
+
+<header id="nav">
+  <div class="wrap">
+    <div class="brand">2025 <b>中國觀測</b></div>
+    <nav id="navlinks">
+      <a href="#overview">總覽</a><a href="#economy">經濟</a><a href="#finance">金融</a><a href="#fiscal">財政</a><a href="#society">社會</a><a href="#politics">政治</a><a href="#conclusion">結論</a><a href="#indicators">50 項指標</a>
+    </nav>
+    <button id="theme" aria-label="切換深淺色">◐</button>
+  </div>
+  <div id="prog"></div>
+</header>
+
+<main>
+<!-- HERO -->
+<div class="wrap hero">
+  <div class="eyebrow">想想論壇 · 中國觀測小組 · 首度年度報告</div>
+  <h1>2025 中國觀測報告<br><em>內冷外熱</em>的一年</h1>
+  <p class="lead">五個面向、50 項觀測指標。房地產崩跌之後，中國經濟的結構性衰退仍在延續：內需與民間投資萎縮，只剩出口獨撐；政治上的清洗則攀上習近平上任以來的新高。</p>
+  <div class="kpis">
+    <div class="kpi red"><div class="n"><span data-count="4.4" data-dec="1">4.4</span><small>%</small></div><div class="l">估計實際經濟成長率<br>(官方統計 5.0%)</div></div>
+    <div class="kpi"><div class="n"><span data-count="1.2" data-dec="1">1.2</span><small>兆美元</small></div><div class="l">貨貿順差，首度突破</div></div>
+    <div class="kpi"><div class="n"><span data-count="102" data-dec="0">102</span><small>兆元</small></div><div class="l">政府累計債務餘額（人民幣，2025 年 10 月）</div></div>
+    <div class="kpi"><div class="n"><span data-count="18.9" data-dec="1">18.9</span><small>%</small></div><div class="l">16–24 歲青年失業率<br>(2025 年 8 月新高)</div></div>
+    <div class="kpi red"><div class="n"><span data-count="16.2" data-dec="1">16.2</span><small>%</small></div><div class="l">四中全會中央與候補委員缺席率</div></div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<section id="overview" class="wrap">
+  <div class="sec-head"><span class="sec-no">總論</span><h2>一句話看五個面向</h2></div>
+  <p class="verdict">經濟學界已有共識：衰退是結構性的。但北京選擇把資源押在科技自主，而不是處理內需。</p>
+  <div class="grid2" style="align-items:start">
+    <div class="prose">
+      <p><strong>2021 年起房地產崩跌</strong>，地方土地財政無以為繼，民間投資與消費快速萎縮。IMF 等機構建議一次性大規模財政支出來處理債務、並提高社會福利，讓內需成為新引擎。</p>
+      <p>然而從 2024 年 7 月三中全會到 2025 年 10 月四中全會，政策方向沒有改變：<strong>重生產、輕消費</strong>，從供給側集中資源加速高科技製造業升級。結果是大量出口消化過剩產能，引發全球對「中國衝擊 2.0」的警覺。</p>
+      <p>報告把觀測分成<strong>經濟、金融、財政、社會、政治</strong>五個面向，共 50 項指標。點選右側卡片可跳到各章。</p>
+    </div>
+    <div class="sumgrid">
+      <a class="sumcard" href="#economy"><span class="no">經濟 · 王國臣</span><h3>L 型底部</h3><p>投資與消費全面緊縮，通縮，只有出口獨撐。</p></a>
+      <a class="sumcard" href="#finance"><span class="no">金融 · 黃崇哲</span><h3>資產負債表衰退</h3><p>行政力量壓住風險顯性化，代價是延宕重估。</p></a>
+      <a class="sumcard" href="#fiscal"><span class="no">財政 · 陶儀芬</span><h3>雨天收傘</h3><p>赤字、發債創高，民生支出縮、稅負加。</p></a>
+      <a class="sumcard" href="#society"><span class="no">社會 · 王占璽</span><h3>社會契約瓦解</h3><p>失業、少子化、抗爭增加，訴求轉向體制不公。</p></a>
+      <a class="sumcard" href="#politics"><span class="no">政治 · 王占璽</span><h3>史達林邏輯</h3><p>越集權越不安，清洗直指軍方高層。</p></a>
+    </div>
+  </div>
+</section>
+
+<!-- ECONOMY -->
+<section id="economy" class="wrap">
+  <div class="sec-head"><span class="sec-no">I</span><h2>經濟</h2><span class="byline">撰稿：王國臣（中華經濟研究院）</span></div>
+  <p class="verdict">官方說成長 5.0%，扣除水分後約 4.4%。投資、消費一起往下，出口一枝獨秀。</p>
+
+  <div class="grid2">
+    <div class="card reveal">
+      <h3>官方成長率 vs 報告估計值</h3>
+      <p class="sub">以支出法反推 GDP，官方數字已連續 8 季高估（2025 年誤差占比 9.1%）</p>
+      <div class="chartbox"><canvas id="ch-gdp"></canvas></div>
+      <p class="note">支出法 = 城鎮固定資產投資 + 房地產開發投資 + 社會消費品零售 + 商品房銷售額 + 經常帳差額。榮鼎集團（Rhodium）推估更低，僅官方的一半，約 2.5%–3.0%。</p>
+    </div>
+    <div class="card reveal">
+      <h3>31 家法人機構：2026 年預測</h3>
+      <p class="sub">按機構類型分組，2025 與 2026 成長率預期（%）</p>
+      <div class="chartbox"><canvas id="ch-fc"></canvas></div>
+      <p class="note">截至 2025 年 12 月 20 日。加權平均 2026 年為 4.4%，較上年下修 0.5 個百分點，且可能低於 5.0% 的政策目標。</p>
+    </div>
+  </div>
+
+  <div class="card reveal" style="margin-top:16px">
+    <h3>內冷外熱：一張圖看失衡</h3>
+    <p class="sub">2025 年各項指標年增率（%）。紅色為出口與供給端，藍色為內需與投資。</p>
+    <div class="chartbox tall"><canvas id="ch-hotcold"></canvas></div>
+    <p class="note">各指標統計期間不同（全年或前 11 個月）；高科技製造業投資為估計值；商品房銷售額與新開工計畫為期間平均年增率。</p>
+  </div>
+
+  <h3 style="margin:36px 0 12px;font-size:22px">指標牆</h3>
+  <div class="chips" id="wall-chips">
+    <button class="chip" aria-pressed="true" data-f="all">全部</button>
+    <button class="chip" aria-pressed="false" data-f="cold"><span class="dot" style="background:var(--cold)"></span>內需 / 投資</button>
+    <button class="chip" aria-pressed="false" data-f="hot"><span class="dot" style="background:var(--hot)"></span>出口 / 供給</button>
+  </div>
+  <div class="wall" id="wall"></div>
+
+  <div class="grid2" style="margin-top:28px">
+    <div class="card reveal">
+      <h3>兩岸「虛假貿易」</h3>
+      <p class="sub">雙方統計差距（億美元）。切換查看不同系列</p>
+      <div class="chips" id="tw-chips">
+        <button class="chip" aria-pressed="true" data-s="exp"><span class="dot" style="background:var(--c2)"></span>中國出口 vs 台灣進口</button>
+        <button class="chip" aria-pressed="false" data-s="imp"><span class="dot" style="background:var(--c1)"></span>台灣出口 vs 中國進口</button>
+        <button class="chip" aria-pressed="false" data-s="gap"><span class="dot" style="background:var(--c3)"></span>差額合計</button>
+      </div>
+      <div class="chartbox"><canvas id="ch-tw"></canvas></div>
+      <p class="note">2025 年中國自台灣進口統計 2,307 億美元，比台灣出口統計多 1,307 億；合計差額 1,388 億，約占中國貨貿順差的 11.6%。</p>
+    </div>
+    <div class="card reveal">
+      <h3>紅色供應鏈崛起</h3>
+      <p class="sub">外商在中國貿易中的份額變化</p>
+      <div class="rng"><div class="lab"><span>外商出口占比</span><span>2013 → 2025</span></div>
+        <div class="bar"><div class="fill" style="left:0;width:47.3%;background:var(--ink-3)">47.3%(2013)</div></div>
+        <div class="bar" style="margin-top:6px"><div class="fill" style="left:0;width:27.1%;background:var(--accent)">27.1%(2025)</div></div></div>
+      <div class="rng"><div class="lab"><span>高科技產品出口占比</span><span>2020 → 2025</span></div>
+        <div class="bar"><div class="fill" style="left:0;width:30%;background:var(--ink-3)">30.0%(2020)</div></div>
+        <div class="bar" style="margin-top:6px"><div class="fill" style="left:0;width:25.1%;background:var(--accent)">25.1%(2025)</div></div></div>
+      <p class="note" style="margin-top:0">電動車、太陽能與鋰電池「新三樣」出口僅占 4.7%。出口平均價格較峰值下跌 15.9%(前 11 個月)。外商進口占比因進口替代政策下降 12.6 個百分點。2023–2025 年，36 個國家對中國發起 765 起雙反一保貿易調查。</p>
+    </div>
+  </div>
+
+  <div style="margin-top:28px">
+    <details><summary><span class="k">01</span>消費到投資的全面緊縮</summary><div class="body">
+      <p>全年社會消費品零售年增 3.7%，連續 6 個月放緩。商品房銷售額連續 30 個月負成長，平均衰退 13.2%；待售面積累計 7.7 億平方米，以每戶 111 平方米計算，尚存約 690 萬間空屋。</p>
+      <p>消費頹靡加劇產能過剩：規模以上工業企業產成品資金 6.9 兆元，較 2013 年底膨脹兩倍；第 4 季產能利用率 74.9%，連續 4 季低於 75% 警戒值。</p>
+      <p>投資端，全年城鎮固定資產投資年減 3.8%，創歷史新低；房地產開發投資年減 17.2%，連續 45 個月負成長；民間投資年減 6.4%;FDI 前 11 個月年減 7.5%，估計撤資 11.1 兆人民幣。</p></div></details>
+    <details><summary><span class="k">02</span>紅色供應鏈橫掃全球</summary><div class="body">
+      <p>全年貨貿出口年增 5.5%，進口零成長，貨貿順差連續 15 個月兩位數成長，首度突破 1.2 兆美元。這引發「中國衝擊 2.0」(China Shock 2.0)的通縮輸出疑慮。</p>
+      <p>墨西哥對中國祭出 50% 關稅，多國加強圍堵、避免中國繞道出口美國。</p></div></details>
+    <details><summary><span class="k">03</span>內外交迫重創經濟信心</summary><div class="body">
+      <p><strong>通縮：</strong>全年 CPI 零成長（此前 9 個月連續為負）;PPI 連續 36 個月負成長，僅次於 2012–2016 年的最長衰退週期。</p>
+      <p><strong>信心：</strong>消費者信心指數連續 44 個月緊縮，平均 88.0 點（低於 100 警戒值）;70 大中城市新屋售價年減 3.0%，連續 45 個月負成長，較高峰重摔 11.8%。製造業 PMI 12 月僅 50.1%，此前連續 8 個月在榮枯線之下。</p>
+      <p><strong>失衡：</strong>規模以上工業增加值年增 6.0%，遠高於服務業生產指數的 0.4%，北京持續「脫虛向實」。</p></div></details>
+    <details><summary><span class="k">04</span>小結：可能長期徘徊於 L 型底部</summary><div class="body">
+      <p>顯著復甦機率低。後續觀察重點有三：</p>
+      <ul><li><strong>貨貿順差若歸零，投資將無以為繼。</strong>出口年增率已由 6.0% 降至 5.4%。</li>
+      <li><strong>外匯管制收緊，</strong>尤其壓制中資企業海外投資。2025 年 11 月新辦法要求單筆跨境匯款 5,000 元人民幣即需核驗身份。</li>
+      <li><strong>房產稅開徵。</strong>2025 年中央經濟工作會議指明健全地方稅體系，房地產稅即為地方稅。</li></ul></div></details>
+  </div>
+</section>
+
+<!-- FINANCE -->
+<section id="finance" class="wrap">
+  <div class="sec-head"><span class="sec-no">II</span><h2>金融</h2><span class="byline">撰稿：黃崇哲（臺灣理財顧問認證協會）</span></div>
+  <p class="verdict">風險沒有被處置，而是被「圍堵」起來。短期不會急性危機，代價是更長的低成長。</p>
+
+  <div class="grid2">
+    <div class="card reveal">
+      <h3>寬鬆了十二年，錢卻不往外流</h3>
+      <p class="sub">拖曳圓點對照「起點 → 2025」</p>
+      <div class="ba" id="ba"></div>
+    </div>
+    <div class="card reveal">
+      <h3>流動性陷阱：點選看傳導斷在哪</h3>
+      <p class="sub">資金充裕，但投資與消費停滯</p>
+      <div class="flow" id="flow"></div>
+      <div class="flow-detail" id="flow-detail"></div>
+    </div>
+  </div>
+
+  <div class="card reveal" style="margin-top:16px">
+    <h3>商業銀行成了地方財政「補坑」的終點站</h3>
+    <p class="sub">商業銀行持有政府債券與占總資產比率（2014 → 2024/2025）</p>
+    <div class="chartbox" style="height:240px"><canvas id="ch-bond"></canvas></div>
+    <p class="note">政府債餘額由 2014 年初 5.3 兆元，至 2024 年突破 60 兆元；占總資產比由 4.2% 增至 13% 以上。2018–19 年為第一波（地方專項債置換非標債務）,2023 年 7 月「一攬子化債」啟動第二波（特殊再融資債券）。</p>
+  </div>
+
+  <div style="margin-top:28px">
+    <details><summary><span class="k">01</span>資金需求疲軟，邁入流動性陷阱</summary><div class="body">
+      <p>存款準備金率由 2013 年的 19.5% 降至 2025 年的 6.2%；一年期 LPR 由 6.4% 降至 3.0%。但 M1 年增率已降至 3% 以下，M2 仍維持 8–9%，自 2021 年起出現明顯的「M1 與 M2 剪刀差」:貨幣流向儲蓄，而非投資。直到 2025 年下半年才因股市熱絡而縮小。</p>
+      <p>資金需求主要來自政府產業政策，人行以再貸款定向支持「新質生產力」,貨幣政策更像是財政政策的延伸工具。</p></div></details>
+    <details><summary><span class="k">02</span>房市劇跌，居民存款成為最後保障</summary><div class="body">
+      <p>2024 年全國不良房貸率升至約 1.9%，為近五年高點，且尚未全面反映開發商違約衝擊（保交樓、債務置換、展期延後認列）。全體銀行不良貸款已超過 3 兆人民幣，並持續累積。</p>
+      <p>過去三年居民存款增加超過 15 兆人民幣，是防禦性儲蓄，雖穩住銀行負債端，卻意味投資與消費意願退縮。中小銀行承壓最重，官方加快推動金融機構「合併與重組」。</p></div></details>
+    <details><summary><span class="k">03</span>股市活絡與經濟成長之間的落差</summary><div class="body">
+      <p>經濟成長率自 2021 年的 8.4% 降至 2024 年約 4.5%，股市卻在寬鬆與政策扶持下走高。政府頻繁動用「國家隊」、限制賣空、鼓勵企業回購（自 2023 年起集中於半導體、AI、新能源），股價反映的是政策預期而非基本面。</p></div></details>
+    <details><summary><span class="k">04</span>「金融監理長城」的徒勞</summary><div class="body">
+      <p>「十五五規劃」提出「建設金融強國」,但實際治理邏輯是以行政力量取代市場機制：<strong>風險不是被處置，而是被圍堵；金融效率不是被提升，而是被鎖住；市場風險訊號不是被校正，而是被掩蓋。</strong></p>
+      <p>官方數據仍呈現撥備覆蓋率由約 179% 升至逾 210%、資本適足率穩定約 15%，但風險隔離工程使壞帳不易浮上檯面。</p></div></details>
+    <details><summary><span class="k">05</span>小結：資產負債表衰退</summary><div class="body">
+      <p>類似辜朝明對日本「失落卅年」的定義：企業與家庭的目標由「利潤最大化」轉為「負債最小化」,無論利率多低，民間傾向還債而非擴張。與 1990 年代日本相比，中國多了房地產牽動地方財政缺口、高齡化與社會安全網不足、外部科技與貿易不確定性，修復成本與時間可能更長。</p></div></details>
+  </div>
+</section>
+
+<!-- FISCAL -->
+<section id="fiscal" class="wrap">
+  <div class="sec-head"><span class="sec-no">III</span><h2>財政</h2><span class="byline">撰稿：陶儀芬（臺灣大學）</span></div>
+  <p class="verdict">負債率尚可，債務率堪憂。錢花在軍事與科技，收傘的是一般人。</p>
+
+  <div class="card reveal">
+    <h3>中央預算支出結構</h3>
+    <p class="sub">占中央政府預算支出比率（%），切換系列</p>
+    <div class="chips" id="fs-chips"></div>
+    <div class="chartbox"><canvas id="ch-fs"></canvas></div>
+    <p class="note">國家安全支出含外交、國防、公共安全與物資儲備，由 2016 年的 47.9% 升至 2025 年的 51.4%(報告內文數字；表 3-1 的 2025 年欄為 51.1%，圖中依表格)。</p>
+  </div>
+
+  <div class="grid2" style="margin-top:16px">
+    <div class="card reveal">
+      <h3>債務有多重?看你用什麼分母</h3>
+      <p class="sub">中國政府債務的三種算法</p>
+      <div class="rng"><div class="lab"><span>帳面債務 / GDP(2024,IMF 數據)</span><span>約 88%</span></div>
+        <div class="bar"><div class="fill" style="left:0;width:44%;background:var(--c2)">88%</div></div></div>
+      <div class="rng"><div class="lab"><span>含隱性債務 / GDP(國際機構估計)</span><span>約 120%，與美國相當</span></div>
+        <div class="bar"><div class="fill" style="left:0;width:60%;background:var(--c3)">120%</div></div></div>
+      <div class="rng"><div class="lab"><span>債務 / 財政收入</span><span>350%–450%，僅次於日本</span></div>
+        <div class="bar"><div class="fill" style="left:0;width:100%;background:var(--accent)">350–450%</div></div></div>
+      <p class="note">隱性債務指城投債、PPP 債券與國企置換債等隱含政府擔保的 70–90 兆元。圖形比例以 200% 為滿刻度（前兩項）與 450% 為滿刻度（第三項）。因人民幣與美元計價落差，只能估計區間。</p>
+    </div>
+    <div class="card reveal">
+      <h3>收入掉得慢，支出掉得更快</h3>
+      <p class="sub">占 GDP 比率：2013 → 2025 年 9 月</p>
+      <div class="ba" id="ba-fis"></div>
+      <p class="note">中央與地方合計的財政缺口率大致持平（40.4% → 38.1%），但地方由 66.7% 升至 91.6%。財政部公布的只含「一般公共預算」與「政府性基金預算」。</p>
+    </div>
+  </div>
+
+  <div class="card reveal" style="margin-top:16px">
+    <h3>2025 年新增債務（1–10 月約 16–17 兆人民幣）</h3>
+    <p class="sub">創歷史新高；累計政府債務餘額 102 兆，接近同期累進 GDP</p>
+    <div class="chartbox" style="height:200px"><canvas id="ch-debt"></canvas></div>
+    <p class="note">另有每年固定發行的一般國債、地方債與城投債。圖僅列報告明確點名的兩項。</p>
+  </div>
+
+  <div style="margin-top:28px">
+    <details><summary><span class="k">01</span>土地財政枯竭，赤字創歷史新高</summary><div class="body">
+      <p>政府收入占 GDP 比例由 2013 年的 22.5% 降到 2025 年 9 月的 16.8%；支出則由 31.6% 降至 23.2%。降幅最大的是以土地出讓為主的「政府性基金預算」。疫情後三年稅收難以成長，稅收有起色時多半與非稅收入增加有關。</p></div></details>
+    <details><summary><span class="k">02</span>支出縮減集中於民生，加重人民負擔</summary><div class="body">
+      <p>稅收擴張包括：互聯網平台須代扣外賣騎手、網約車司機、直播主與電商業者的稅（10 月 1 日起）；國債利息、境外投資收入、黃金交易開始課稅。結果是 2025 年 1–11 月個人所得稅年增 11.5%，企業所得稅僅 1.7%。</p>
+      <p>地方政府則靠非稅收入：2024 年地方非稅收入超過 4 兆元，占地方公共預算收入的 34%(2010 年不到 1 兆)。「遠洋捕撈」(違規異地趨利性執法)引發民怨後，2025 年雖不再明目張膽，仍然盛行。</p></div></details>
+    <details><summary><span class="k">03</span>小結：債務/收入比升高，影響治理能力</summary><div class="body">
+      <p>若成長無法回升，地方財政赤字未來 3–5 年內就會超過地方財政收入，長期靠舉債支撐。如果中央不改變「輕民生消費、重製造生產」的策略，並扭轉央地收支極端不平衡，膨脹的債務會進一步影響經濟復甦與社會穩定，甚至引發國家信用問題。</p></div></details>
+  </div>
+
+  <div class="card reveal" style="margin-top:20px">
+    <h3>2025 年增加財政收入的相關法規</h3>
+    <p class="sub">表 3-2</p>
+    <div class="scroll-x"><table class="tbl" id="tax-tbl"></table></div>
+  </div>
+</section>
+
+<!-- SOCIETY -->
+<section id="society" class="wrap">
+  <div class="sec-head"><span class="sec-no">IV</span><h2>社會</h2><span class="byline">撰稿：王占璽（國防安全研究院）</span></div>
+  <p class="verdict">「以接受集權換取生活改善」的社會契約正在瓦解，抗爭的訴求從經濟利益轉向體制不公。</p>
+
+  <div class="grid2">
+    <div class="card reveal">
+      <h3>社會抗爭事件數</h3>
+      <p class="sub">2025 年 1–11 月已遠高於 2022–2024 各年度</p>
+      <div class="chartbox"><canvas id="ch-protest"></canvas></div>
+    </div>
+    <div class="card reveal">
+      <h3>萬人以上突發性集體抗爭</h3>
+      <p class="sub">疫情前 15 年僅 5 起；2023 年起每年發生</p>
+      <div class="chartbox"><canvas id="ch-10k"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid2" style="margin-top:16px">
+    <div class="card reveal">
+      <h3>人心：信心指數跌到新低</h3>
+      <p class="sub">2025 年民眾調查（%）</p>
+      <div class="chartbox" style="height:240px"><canvas id="ch-conf"></canvas></div>
+    </div>
+    <div class="card reveal">
+      <h3>養老保險基金當期差額</h3>
+      <p class="sub">億人民幣（2025 為 1–9 月）</p>
+      <div class="chartbox" style="height:240px"><canvas id="ch-pen"></canvas></div>
+      <p class="note">估計最遲 2044 年以前耗盡盈餘。2025 年養老金上調幅度降至歷年最低的 2%。</p>
+    </div>
+  </div>
+
+  <div class="wall" style="margin-top:16px">
+    <div class="st cold"><div class="v">954<small style="font-size:.5em"> → </small>792</div><div class="t">出生人口（萬）</div><div class="d">2024 年 954 萬；2025 年可能降至 792 萬新低，生育率首次跌破 1</div></div>
+    <div class="st cold"><div class="v">611萬</div><div class="t">2024 年結婚對數</div><div class="d">創新低紀錄</div></div>
+    <div class="st"><div class="v">22%</div><div class="t">60 歲以上人口</div><div class="d">3.1 億人；65 歲以上 15.6%、2.2 億人</div></div>
+    <div class="st"><div class="v">22.5→30+%</div><div class="t">老年撫養比</div><div class="d">2023 年 → 2035 年預估，每 100 名勞動人口需扶養 30 名以上老人</div></div>
+    <div class="st cold"><div class="v">28%</div><div class="t">工齡人口失業率（螞蟻研究院）</div><div class="d">2025 Q1，含無意找工作者；靈活就業 19.7%，傳統就業僅 52.4%</div></div>
+    <div class="st"><div class="v">70%</div><div class="t">月收入 5000 元以下</div><div class="d">約 6 億人，占 8.57 億勞動人口；90% 個稅來自前 10% 高收入者</div></div>
+  </div>
+
+  <h3 style="margin:36px 0 12px;font-size:22px">四種社會衝突型態</h3>
+  <div class="tabs" id="conf-tabs"></div>
+  <div id="conf-panes"></div>
+
+  <div style="margin-top:28px">
+    <details><summary><span class="k">01</span>失業問題惡化與收入差距拉大</summary><div class="body">
+      <p>青年（16–24 歲）失業率持續攀升，2023 年中曾停止公布，年底調整口徑後恢復；2025 年 8 月達 18.9% 新高。城鎮整體失業率維持在 5.2–5.3%。</p>
+      <p>高收入群體與低收入群體的平均收入差距，2013 年為 4.3054 萬、2020 年為 7.2425 萬，2024 年增至 8.9266 萬人民幣。超過 14 個省市 2025 年私營部門平均工資成長低於 2%。</p></div></details>
+    <details><summary><span class="k">02</span>民眾對經濟前景缺乏信心</summary><div class="body">
+      <p>僅 46.5% 民眾滿意當前收入水準，對未來收入提高抱持期待的僅 45.9%；對就業情況滿意的比例在 2025 年 9 月降至 25.8%，期待就業改善的信心降至 42.1%。個人房貸與消費貸款均在 2025 年出現縮減，民眾傾向提前還債。</p></div></details>
+    <details><summary><span class="k">03</span>人口結構與社會保障</summary><div class="body">
+      <p>2024 年有 2.11 萬所幼兒園關停（占年初總數 7.7%），小學減少 7,500 所，學前及小學教師減少 30 萬人；少子化將在 2035 年開始衝擊大專教育與勞動市場。</p>
+      <p>社保要求企業與民眾共同繳納 40% 保費，勞工支付比例高達 10%–22.5%。月收入低於 5000 元者的負擔甚至可能高於實際薪資，約 7 成企業少繳或不繳。最高法院 8 月裁決強制徵收社保，引發反彈，各地隨即降低基數漲幅（2024 年 4%–23% → 2025 年 0.9%–8%），超過 15 個省份補貼個人保費 25%。</p></div></details>
+    <details><summary><span class="k">04</span>小結：社會結構性矛盾加深</summary><div class="body">
+      <p>《經濟學人》(2024)稱之為「新階級鬥爭」,《日經》(2025)認為已進入 Michael Lind 所述的「新階級戰爭」。「十五五規劃」提出「暢通社會流動渠道」的新表述，但同時強調「盡力而為、量力而行」,顯示當局無意提高民生問題的優先順序。</p></div></details>
+  </div>
+</section>
+
+<!-- POLITICS -->
+<section id="politics" class="wrap">
+  <div class="sec-head"><span class="sec-no">V</span><h2>政治</h2><span class="byline">撰稿：王占璽（國防安全研究院）</span></div>
+  <p class="verdict">2025 年的政治壓力來自最高領導人發起的清洗：對象幾乎都是習近平的人馬。</p>
+
+  <div class="kpis" style="margin-top:0;margin-bottom:16px">
+    <div class="kpi red"><div class="n"><span data-count="37">37</span></div><div class="l">205 位中央委員缺席（18%，含任內死亡者）</div></div>
+    <div class="kpi red"><div class="n"><span data-count="24">24</span></div><div class="l">171 位候補委員缺席（14%）</div></div>
+    <div class="kpi"><div class="n"><span data-count="23">23</span></div><div class="l">四中全會落馬的中央與候補委員，含 1 名政治局委員、10 名將領</div></div>
+    <div class="kpi"><div class="n">11<small>/32</small></div><div class="l">現役上將出席四中全會人數</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card reveal">
+      <h3>歷次全會缺席率</h3>
+      <p class="sub">中央與候補委員合計（%），點選屆別篩選</p>
+      <div class="chips" id="ab-chips">
+        <button class="chip" aria-pressed="true" data-g="all">全部</button>
+        <button class="chip" aria-pressed="false" data-g="18">18 屆</button>
+        <button class="chip" aria-pressed="false" data-g="19">19 屆</button>
+        <button class="chip" aria-pressed="false" data-g="20">20 屆</button>
+      </div>
+      <div class="chartbox"><canvas id="ch-ab"></canvas></div>
+      <p class="note">20 屆四中全會的 16.2% 遠超習近平上任以來歷次全會，應是改革開放以來最高紀錄。</p>
+    </div>
+    <div class="card reveal">
+      <h3>任內落馬的中央與候補委員</h3>
+      <p class="sub">人數（人），按任期比較</p>
+      <div class="chartbox"><canvas id="ch-fall"></canvas></div>
+      <p class="note">18 大期間共 35 人（含 8 名將領）;19 大期間 6 人；兩屆 10 年均無現任政治局委員落馬。20 屆僅四中全會一次即達 23 人。單次最多為 18 屆七中全會的 15 人。</p>
+    </div>
+  </div>
+
+  <div class="card reveal" style="margin-top:16px">
+    <h3>省部級以上幹部被調查與處分</h3>
+    <p class="sub">人數（人）;「調查人數」報告僅列 2023–2025 年</p>
+    <div class="chartbox"><canvas id="ch-prov"></canvas></div>
+    <p class="note">20 大以來（2023 起三年）正副省部級以上被處分者 191 名，而 19 屆五年期間（2018–2022）約 208 名。</p>
+  </div>
+
+  <div class="card reveal" style="margin-top:16px">
+    <h3>全國紀檢監察機關處分人員：層級越低，增速越快</h3>
+    <p class="sub">切換年份，看各層級處分人數（單位各異）</p>
+    <div class="chips" id="dis-chips">
+      <button class="chip" aria-pressed="false" data-y="2023">2023</button>
+      <button class="chip" aria-pressed="false" data-y="2024">2024</button>
+      <button class="chip" aria-pressed="true" data-y="2025">2025</button>
+    </div>
+    <div class="chartbox"><canvas id="ch-dis"></canvas></div>
+    <p class="note">「其他人員」(農村集體企業與國企中不具正式官職者)三年平均年增 23.9%。受黨紀處分者占整體比例由 2023 年 82% 降至 2025 年 74%，顯示反腐正擴散到非黨員的基層體制內人員。處分總人數單位為萬人。</p>
+  </div>
+
+  <div class="card reveal" style="margin-top:16px">
+    <h3>三中與四中全會：誰被拿下?</h3>
+    <p class="sub">表 5-1，點選全會</p>
+    <div class="chips" id="ppl-chips">
+      <button class="chip" aria-pressed="false" data-p="3">20 屆三中</button>
+      <button class="chip" aria-pressed="true" data-p="4">20 屆四中</button>
+    </div>
+    <div class="ppl" id="ppl"></div>
+  </div>
+
+  <div style="margin-top:28px">
+    <details><summary><span class="k">01</span>解放軍是重災區</summary><div class="body">
+      <p>現役 32 位上將僅 11 位出席四中全會，9 位在會前被開除黨籍，其中 8 位為中央委員，包括軍委副主席何衛東與政治工作部主任苗華。何衛東是 18 大以來第一位任內落馬的政治局委員。42 名軍方代表中 27 人缺席（出席率 36%）；五大戰區、四大軍種與武警的 21 名司令員與政委中有 14 名缺席。整肅可能延續至 2026 年。</p></div></details>
+    <details><summary><span class="k">02</span>黨政領域力度不亞於軍方</summary><div class="body">
+      <p>缺席的黨政官員達 30 名，其中 14 名確認落馬，超過 18 屆七中全會的 13 名。包括內蒙古王莉霞、廣西藍天立、山西金湘軍三位地方大員，以及自 7 月起下落不明的中聯部長劉建超。四中全會後，政治局委員馬興瑞也多次缺席重要活動，疑似遭調查。</p></div></details>
+    <details><summary><span class="k">03</span>向上升、向下沉、向外擴</summary><div class="body">
+      <ul><li><strong>向上升：</strong>2025 年省部級官員被處分 69 人，被立案調查 115 人（2023 年 87、2024 年 73），達 20 大以來新高。</li>
+      <li><strong>向下沉：</strong>行政層級愈低，擴張愈快。</li>
+      <li><strong>向外擴：</strong>查處範圍外溢到非黨員的基層體制內人員。</li></ul></div></details>
+    <details><summary><span class="k">04</span>小結：史達林邏輯</summary><div class="body">
+      <p>政治忠誠已成為運作核心議程，整肅對象幾乎都是廣義習近平人馬，包括福建 31 軍出身的將領和 20 大上由他「親自安排、層層把關」選出的官員。史丹佛大學吳國光稱之為「史達林邏輯」:越集權，越不安穩。</p>
+      <p>代價是官員普遍的不安全感、無人敢質疑上級路線、空缺由經驗不足者接手，使決策風險升高、跨部門協調更困難。「十五五規劃」充分反映習近平路線，顯示他仍掌握政經政策主導權。</p></div></details>
+  </div>
+</section>
+
+<!-- CONCLUSION -->
+<section id="conclusion" class="wrap">
+  <div class="sec-head"><span class="sec-no">結論</span><h2>政策轉向短期內不會發生</h2></div>
+  <div class="prose">
+    <p>2025 年底中央經濟工作會議提出 2026 年八項重點任務，第一項是「堅持內需主導」,但作法仍強調「擴大優質商品和服務供給」,「穩定房地產市場」被放到最後的第八項。《求是》刊出的習近平《擴大內需是戰略之舉》,內容是 2015 年以來相關講話的摘要，市場感受到的重點在「戰略」而不在「擴大內需」。</p>
+    <p>報告預測：內需短期難見起色，過剩產能只能以「內捲」的削價競爭與出口消化；2026 年成長持續依賴出口（2025 年出口對 GDP 成長貢獻度約 33%，為 1997 年以來最高）。</p>
+  </div>
+  <h3 style="margin:28px 0 12px;font-size:22px">值得持續觀察</h3>
+  <div class="watch">
+    <div class="card"><h3>出口自主空間</h3><p>出口獨撐成長，究竟讓中國在全球供應鏈的經濟自主空間增加或減少?</p></div>
+    <div class="card"><h3>中國衝擊 2.0</h3><p>各國反傾銷與關稅圍堵，可能使出口成長很快遇到瓶頸，貿易關係更加緊張。</p></div>
+    <div class="card"><h3>新階級戰爭</h3><p>經濟低迷與社會不公，讓體制性抗爭持續增加。</p></div>
+    <div class="card"><h3>治理能力</h3><p>清洗之後，政治忠誠與專業經驗傳承之間能否取得平衡?軍隊整肅恐延續至 2026 年。</p></div>
+  </div>
+</section>
+
+<!-- INDICATORS -->
+<section id="indicators" class="wrap">
+  <div class="sec-head"><span class="sec-no">附錄</span><h2>50 項觀測指標</h2></div>
+  <p class="prose">資料來源包括中國政府公開數據、政府相關法人機構（如中國國債登記結算公司、上海與深圳交易所），以及具公信力的民間研究機構與新聞報導，部分數據依據理論自行計算。</p>
+  <div style="height:14px"></div>
+  <input class="search" id="ind-q" type="search" placeholder="搜尋指標，例如：失業、債務、軍方" aria-label="搜尋指標">
+  <div class="chips" id="ind-chips"></div>
+  <ul class="ind-list" id="ind-list"></ul>
+  <p class="note" id="ind-count"></p>
+</section>
+</main>
+
+<footer><div class="wrap">
+  <p>本頁為想想論壇《2025 中國觀測報告》(中國觀測小組：王占璽、王國臣、陶儀芬、黃崇哲；研究助理：莊毅楷、黃品儀)的互動式閱讀版。所有數字均摘自報告文字與表格，圖形僅繪製報告明確列出數值者。報告自述為「對現狀的一個時間切面」,並非終極結論。完整分析請參閱原報告。</p>
+</div></footer>
+<button class="btn-top" id="top" aria-label="回到頂端">↑</button>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+/* ---------- theme ---------- */
+const root=document.documentElement;
+try{const t=localStorage.getItem('theme'); if(t) root.dataset.theme=t;}catch(e){}
+$('#theme').onclick=()=>{
+  const dark=root.dataset.theme==='dark'||(!root.dataset.theme&&matchMedia('(prefers-color-scheme: dark)').matches);
+  root.dataset.theme=dark?'light':'dark';
+  try{localStorage.setItem('theme',root.dataset.theme)}catch(e){}
+  setTimeout(rebuildCharts,30);
+};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>setTimeout(rebuildCharts,30));
+
+/* ---------- nav / progress / reveal / counters ---------- */
+const links=$$('#navlinks a'), secs=links.map(a=>$(a.getAttribute('href')));
+function onScroll(){
+  const h=document.documentElement; const p=h.scrollTop/(h.scrollHeight-h.clientHeight);
+  $('#prog').style.width=(p*100)+'%';
+  $('#top').classList.toggle('on',h.scrollTop>800);
+  let cur=-1; secs.forEach((s,i)=>{ if(s.getBoundingClientRect().top<140) cur=i; });
+  links.forEach((a,i)=>a.classList.toggle('on',i===cur));
+  if(cur>=0){const nv=$('#navlinks'),a=links[cur];nv.scrollLeft=a.offsetLeft-nv.clientWidth/2+a.offsetWidth/2;}
+}
+addEventListener('scroll',onScroll,{passive:true}); onScroll();
+$('#top').onclick=()=>scrollTo({top:0});
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting) return; e.target.classList.add('in'); io.unobserve(e.target);
+}),{threshold:.12});
+$$('.reveal').forEach(el=>io.observe(el));
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cio=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting) return; cio.unobserve(e.target);
+  const el=e.target, to=+el.dataset.count, dec=+(el.dataset.dec||0);
+  if(reduce){el.textContent=to.toFixed(dec);return;}
+  const t0=performance.now(), d=1100;
+  (function f(t){const k=Math.min(1,(t-t0)/d), v=to*(1-Math.pow(1-k,3)); el.textContent=v.toFixed(dec); if(k<1) requestAnimationFrame(f);})(t0);
+}),{threshold:.6});
+$$('[data-count]').forEach(el=>cio.observe(el));
+
+/* ---------- charts ---------- */
+const charts=[]; const builders=[];
+function chart(id,fn,h){
+  const make=()=>{
+    const old=Chart.getChart(id); if(old) old.destroy();
+    const cfg=fn(); const c=new Chart(document.getElementById(id),cfg); return c;
+  };
+  builders.push(make); return make();
+}
+function rebuildCharts(){ builders.forEach(b=>b()); }
+function base(extra={}){
+  const ink2=css('--ink-2'), line=css('--line');
+  Chart.defaults.font.family=getComputedStyle(document.body).fontFamily;
+  Chart.defaults.color=ink2;
+  return Object.assign({
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{boxWidth:10,boxHeight:10,usePointStyle:true}},tooltip:{padding:10,cornerRadius:8}},
+    scales:{x:{grid:{display:false},border:{color:line}},y:{grid:{color:line},border:{display:false}}}
+  },extra);
+}
+const C=()=>({c1:css('--c1'),c2:css('--c2'),c3:css('--c3'),c4:css('--c4'),ink3:css('--ink-3'),cold:css('--cold'),hot:css('--hot'),ink:css('--ink')});
+
+// GDP official vs estimate
+chart('ch-gdp',()=>{const c=C();return{type:'bar',data:{labels:['2022','2023','2024','2025'],datasets:[
+  {label:'官方統計',data:[3.0,5.2,5.0,5.0],backgroundColor:c.ink3,borderRadius:4},
+  {label:'報告估計值',data:[3.0,4.7,4.3,4.4],backgroundColor:c.c1,borderRadius:4}]},
+  options:base({plugins:{legend:{position:'bottom',labels:{usePointStyle:true}},tooltip:{callbacks:{label:x=>`${x.dataset.label}:${x.raw}%`}}}})};});
+
+// forecasts
+chart('ch-fc',()=>{const c=C();return{type:'bar',data:{labels:['國際組織（6）','信用評等（3）','商業諮詢（3）','財經傳媒（3）','投資銀行（16）','加權平均'],datasets:[
+  {label:'2025 年',data:[4.9,4.8,5.0,4.9,4.9,4.9],backgroundColor:c.ink3,borderRadius:4},
+  {label:'2026 年預測',data:[4.4,4.3,4.6,4.4,4.5,4.4],backgroundColor:c.c2,borderRadius:4}]},
+  options:base({scales:{x:{grid:{display:false}},y:{min:3.5,grid:{color:css('--line')}}},plugins:{legend:{position:'bottom',labels:{usePointStyle:true}}}})};});
+
+// hot-cold
+chart('ch-hotcold',()=>{const c=C();
+  const d=[['工業增加值',6.0,1],['OFDI(對外直接投資)',6.9,1],['出口',5.5,1],['社會消費品零售',3.7,0],['服務業生產指數',0.4,0],['CPI',0,0],['進口',0,1],
+    ['國企投資',-2.5,0],['城鎮固定資產投資',-3.8,0],['高科技製造業投資（估）',-4.2,0],['民間投資',-6.4,0],['FDI(前11月)',-7.5,0],['新開工計畫（平均）',-9.9,0],['商品房銷售額（平均）',-13.2,0],['房地產開發投資',-17.2,0]]
+    .sort((a,b)=>b[1]-a[1]);
+  return{type:'bar',data:{labels:d.map(x=>x[0]),datasets:[{data:d.map(x=>x[1]),backgroundColor:d.map(x=>x[2]?c.hot:c.cold),borderRadius:4}]},
+  options:base({indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>`年增 ${x.raw}%`}}},scales:{x:{grid:{color:css('--line')},ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}}})};});
+
+// cross-strait
+const TW={yrs:['2020','2021','2022','2023','2024','2025'],
+  exp:[[601,784,816,685,752,836],[636,825,840,702,793,917]],
+  imp:[[1024,1259,1211,957,970,1001],[2007,2500,2381,1993,2178,2307]],
+  gap:[[34,41,24,17,41,81],[982,1241,1170,1036,1208,1307],[1017,1282,1194,1054,1250,1388]]};
+let twS='exp';
+function twCfg(){const c=C();
+  const defs={exp:[['中國出口統計',TW.exp[0],c.c2],['台灣進口統計',TW.exp[1],c.c1]],
+    imp:[['台灣出口統計',TW.imp[0],c.c2],['中國進口統計',TW.imp[1],c.c1]],
+    gap:[['出口低報',TW.gap[0],c.c2],['進口高報',TW.gap[1],c.c1],['合計',TW.gap[2],c.c3]]}[twS];
+  return{type:'line',data:{labels:TW.yrs,datasets:defs.map(d=>({label:d[0],data:d[1],borderColor:d[2],backgroundColor:d[2],tension:.3,pointRadius:4,borderWidth:2.5}))},
+    options:base({plugins:{legend:{position:'bottom',labels:{usePointStyle:true}},tooltip:{mode:'index',intersect:false,callbacks:{label:x=>`${x.dataset.label}:${x.raw.toLocaleString()} 億美元`}}},interaction:{mode:'index',intersect:false}})};}
+chart('ch-tw',twCfg);
+$$('#tw-chips .chip').forEach(b=>b.onclick=()=>{twS=b.dataset.s;$$('#tw-chips .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));Chart.getChart('ch-tw').destroy();new Chart(document.getElementById('ch-tw'),twCfg());});
+
+// bonds
+chart('ch-bond',()=>{const c=C();return{type:'bar',data:{labels:['商銀持有政府債（兆元）','占總資產比（%）'],datasets:[
+  {label:'2014',data:[5.3,4.2],backgroundColor:c.ink3,borderRadius:4},{label:'2024(兆元)/近期（占比）',data:[60,13],backgroundColor:c.c1,borderRadius:4}]},
+  options:base({indexAxis:'y',scales:{x:{grid:{color:css('--line')}},y:{grid:{display:false}}},plugins:{legend:{position:'bottom',labels:{usePointStyle:true}},tooltip:{callbacks:{label:x=>`${x.dataset.label}:${x.dataIndex?x.raw+'% 以上':x.raw+' 兆以上'}`}}}})};});
+
+// fiscal spending
+const FS={yrs:['2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'],
+  d:{'教育科技':[15.0,14.7,14.9,15.2,14.0,14.0,13.3,12.8,12.9,13.1],'社保醫療':[3.7,3.8,4.3,3.9,4.3,3.4,2.8,3.2,3.6,3.2],'基建投資':[18.3,17.2,16.6,16.3,17.1,17.4,18.0,17.9,16.9,16.9],'國家安全':[47.9,47.6,46.3,43.8,46.4,48.9,50.9,51.5,50.4,51.1]}};
+const fsOn=new Set(Object.keys(FS.d));
+const fsCol=()=>{const c=C();return{'教育科技':c.c2,'社保醫療':c.c4,'基建投資':c.c3,'國家安全':c.c1};};
+function fsCfg(){const col=fsCol();return{type:'line',data:{labels:FS.yrs,datasets:Object.keys(FS.d).filter(k=>fsOn.has(k)).map(k=>({label:k,data:FS.d[k],borderColor:col[k],backgroundColor:col[k],tension:.25,pointRadius:3.5,borderWidth:2.5}))},
+  options:base({interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{usePointStyle:true}},tooltip:{callbacks:{label:x=>`${x.dataset.label}:${x.raw}%`}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid:{color:css('--line')},ticks:{callback:v=>v+'%'}}}})};}
+chart('ch-fs',fsCfg);
+function renderFsChips(){const col=fsCol();$('#fs-chips').innerHTML=Object.keys(FS.d).map(k=>`<button class="chip" aria-pressed="${fsOn.has(k)}" data-k="${k}"><span class="dot" style="background:${col[k]}"></span>${k}</button>`).join('');
+  $$('#fs-chips .chip').forEach(b=>b.onclick=()=>{fsOn.has(b.dataset.k)?(fsOn.size>1&&fsOn.delete(b.dataset.k)):fsOn.add(b.dataset.k);renderFsChips();Chart.getChart('ch-fs').destroy();new Chart(document.getElementById('ch-fs'),fsCfg());});}
+renderFsChips();
+
+// debt
+chart('ch-debt',()=>{const c=C();return{type:'bar',data:{labels:['超長期特別國債（中央）','地方專項債（置換債務與基建）'],datasets:[{data:[1.3,4.4],backgroundColor:[c.c2,c.c1],borderRadius:4}]},
+  options:base({indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>`${x.raw} 兆人民幣`}}},scales:{x:{grid:{color:css('--line')},ticks:{callback:v=>v+' 兆'}},y:{grid:{display:false}}}})};});
+
+// protests
+chart('ch-protest',()=>{const c=C();return{type:'bar',data:{labels:['2022','2023','2024','2025(1–11月)'],datasets:[{data:[1545,2960,3592,5014],backgroundColor:[c.ink3,c.ink3,c.ink3,c.c1],borderRadius:4}]},
+  options:base({plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>`${x.raw.toLocaleString()} 起`}}}})};});
+// 10k
+chart('ch-10k',()=>{const c=C();const v=[1,0,0,0,1,1,0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,2];
+  return{type:'bar',data:{labels:v.map((_,i)=>String(2004+i)),datasets:[{data:v,backgroundColor:v.map((x,i)=>i>=19?c.c1:c.ink3),borderRadius:3}]},
+  options:base({plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>`${x.raw} 起`}}},scales:{x:{grid:{display:false},ticks:{maxRotation:0,callback:function(v,i){return i%3===0?this.getLabelForValue(v):'';}}},y:{ticks:{stepSize:1},grid:{color:css('--line')}}}})};});
+// confidence
+chart('ch-conf',()=>{const c=C();return{type:'bar',data:{labels:['滿意當前收入','期待收入提高','期待就業改善','滿意當前就業'],datasets:[{data:[46.5,45.9,42.1,25.8],backgroundColor:[c.ink3,c.ink3,c.ink3,c.c1],borderRadius:4}]},
+  options:base({indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.raw+'%'}}},scales:{x:{min:0,max:60,grid:{color:css('--line')},ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}}})};});
+// pension
+chart('ch-pen',()=>{const c=C();const v=[-5428,5597,5854,8322,9041,6459];return{type:'bar',data:{labels:['2020','2021','2022','2023','2024','2025'],datasets:[{data:v,backgroundColor:v.map(x=>x<0?c.c1:c.c4),borderRadius:4}]},
+  options:base({plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.raw.toLocaleString()+' 億人民幣'}}}})};});
+
+// absenteeism
+const AB=[['18屆1中',0.0,18],['2中',1.1,18],['3中',0.8,18],['4中',3.5,18],['5中',5.6,18],['6中',7.4,18],['7中',11.7,18],
+  ['19屆1中',0.0,19],['2中',0.3,19],['3中',0.8,19],['4中',1.3,19],['5中',3.2,19],['6中',7.4,19],['7中',4.8,19],
+  ['20屆1中',1.3,20],['2中',0.8,20],['3中',3.2,20],['4中',16.2,20]];
+let abG='all';
+function abCfg(){const c=C();const d=AB.filter(x=>abG==='all'||x[2]==abG);const col={18:c.ink3,19:c.c2,20:c.c1};
+  return{type:'bar',data:{labels:d.map(x=>x[0]),datasets:[{data:d.map(x=>x[1]),backgroundColor:d.map(x=>col[x[2]]),borderRadius:3}]},
+  options:base({plugins:{legend:{display:false},tooltip:{callbacks:{title:i=>{const x=d[i[0].dataIndex];return x[2]+'屆 '+x[0].replace(/^\d+屆/,'');},label:x=>x.raw+'%'}}},scales:{x:{grid:{display:false},ticks:{maxRotation:60,autoSkip:false,font:{size:11}}},y:{grid:{color:css('--line')},ticks:{callback:v=>v+'%'}}}})};}
+chart('ch-ab',abCfg);
+$$('#ab-chips .chip').forEach(b=>b.onclick=()=>{abG=b.dataset.g;$$('#ab-chips .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));Chart.getChart('ch-ab').destroy();new Chart(document.getElementById('ch-ab'),abCfg());});
+
+// fall
+chart('ch-fall',()=>{const c=C();return{type:'bar',data:{labels:['18大期間（5年）','19大期間（5年）','20屆四中全會（單次）'],datasets:[{data:[35,6,23],backgroundColor:[c.ink3,c.c2,c.c1],borderRadius:4}]},
+  options:base({plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.raw+' 人'}}}})};});
+
+// provincial
+chart('ch-prov',()=>{const c=C();return{type:'bar',data:{labels:['2017','2018','2019','2020','2021','2022','2023','2024','2025'],datasets:[
+  {label:'處分人數',data:[58,51,41,27,36,53,49,73,69],backgroundColor:c.c2,borderRadius:4},
+  {label:'調查人數',data:[null,null,null,null,null,null,87,73,115],backgroundColor:c.c1,borderRadius:4}]},
+  options:base({plugins:{legend:{position:'bottom',labels:{usePointStyle:true}}}})};});
+
+// discipline
+const DIS={labels:['省部級（人）','廳局級（百人）','縣處級（千人）','鄉科級（萬人）','一般幹部（萬人）','其他人員（萬人）','總人數（萬人）'],
+  2023:[49,31.44,24,8.2,8.5,41.7,61],2024:[73,38.38,31,11.2,12.8,61.3,88.9],2025:[69,41.55,35,12.5,13.3,68.6,98.3]};
+let disY='2025';
+function disCfg(){const c=C();return{type:'bar',data:{labels:DIS.labels,datasets:[{label:disY,data:DIS[disY],backgroundColor:c.c1,borderRadius:4}]},
+  options:base({plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{autoSkip:false,maxRotation:35,font:{size:11}}},y:{grid:{color:css('--line')},max:110}}})};}
+chart('ch-dis',disCfg);
+$$('#dis-chips .chip').forEach(b=>b.onclick=()=>{disY=b.dataset.y;$$('#dis-chips .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  const ch=Chart.getChart('ch-dis');ch.data.datasets[0].data=DIS[disY];ch.data.datasets[0].label=disY;ch.update();});
+
+/* ---------- stat wall ---------- */
+const WALL=[
+ ['3.7%','社會消費品零售','全年年增，連續 6 個月放緩','cold'],
+ ['30 個月','商品房銷售額負成長','平均衰退 13.2%','cold'],
+ ['−3.8%','城鎮固定資產投資','創歷史新低；1995 年以來首次衰退','cold'],
+ ['−17.2%','房地產開發投資','連續 45 個月負成長','cold'],
+ ['−6.4%','民間投資','增速連續 37 個月低於 1%','cold'],
+ ['−7.5%','外人直接投資（前 11 月）','連續 31 個月負成長；估計撤資 11.1 兆元','cold'],
+ ['0%','CPI 全年','此前 9 個月連續為負；PPI 連續 36 個月負成長','cold'],
+ ['74.9%','第 4 季產能利用率','連續 4 季低於 75% 警戒值','cold'],
+ ['88.0','消費者信心指數（平均）','連續 44 個月緊縮；100 為警戒值','cold'],
+ ['+5.5%','貨貿出口','連續 24 個月正成長','hot'],
+ ['1.2 兆美元','貨貿順差','舉世震驚，首度突破','hot'],
+ ['+6.0%','工業增加值（前 11 月）','服務業生產指數僅 +0.4%','hot'],
+ ['+6.9%','對外直接投資 OFDI','前 11 個月，連續 5 個月走揚','hot'],
+ ['33%','出口對 GDP 成長貢獻度','1997 年以來最高','hot'],
+ ['765 起','雙反一保調查','2023–2025 年，36 個國家對中國發起','hot']];
+$('#wall').innerHTML=WALL.map(w=>`<div class="st ${w[3]}" data-t="${w[3]}"><div class="v">${w[0]}</div><div class="t">${w[1]}</div><div class="d">${w[2]}</div></div>`).join('');
+$$('#wall-chips .chip').forEach(b=>b.onclick=()=>{$$('#wall-chips .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  $$('#wall .st').forEach(s=>s.classList.toggle('hide',b.dataset.f!=='all'&&s.dataset.t!==b.dataset.f));});
+
+/* ---------- before-after sliders ---------- */
+function ba(el,rows,unit){
+  const maxOf=r=>r.max;
+  el.innerHTML=rows.map(r=>{
+    const lo=Math.min(r.a,r.b), hi=Math.max(r.a,r.b), pct=v=>(v/r.max*100);
+    return `<div class="ba-row"><div class="lab"><span>${r.t}</span><span>${r.la} → <b style="color:var(--accent)">${r.lb}</b></span></div>
+    <div class="ba-track"><div class="ba-seg" style="left:${pct(lo)}%;width:${pct(hi)-pct(lo)}%"></div><div class="ba-pt a" style="left:${pct(r.a)}%"></div><div class="ba-pt b" style="left:${pct(r.b)}%"></div></div></div>`;}).join('');
+}
+ba($('#ba'),[
+ {t:'存款準備金率',a:19.5,b:6.2,max:25,la:'19.5%(2013)',lb:'6.2%(2025)'},
+ {t:'一年期 LPR',a:6.4,b:3.0,max:8,la:'6.4%(2013)',lb:'3.0%(2025)'},
+ {t:'M1 年增率 vs M2 年增率',a:3,b:8.5,max:12,la:'M1 <3%',lb:'M2 8–9%'},
+ {t:'撥備覆蓋率',a:179,b:210,max:260,la:'約 179%(2020)',lb:'逾 210%'}]);
+ba($('#ba-fis'),[
+ {t:'政府收入 / GDP',a:22.5,b:16.8,max:35,la:'22.5%(2013)',lb:'16.8%(2025/9)'},
+ {t:'政府支出 / GDP',a:31.6,b:23.2,max:35,la:'31.6%(2013)',lb:'23.2%(2025/9)'},
+ {t:'地方財政資金缺口率',a:66.7,b:91.6,max:100,la:'66.7%(2013)',lb:'91.6%(2025/9)'},
+ {t:'全國財政收支缺口率',a:40.4,b:38.1,max:100,la:'40.4%(2013)',lb:'38.1%(2025/9)'}]);
+
+/* ---------- liquidity flow ---------- */
+const FL=[['1','央行寬鬆','存款準備金率降至 6.2%，LPR 降至 3.0%，公開市場操作維持寬鬆。政策利率持續下行，方向沒有錯。'],
+ ['2','貨幣流向儲蓄','M2 仍有 8–9%，但 M1(活期、交易性資金)降到 3% 以下，出現持續「負剪刀差」:資金停在定期存款，沒有轉成投資與消費。'],
+ ['3','資金改走政策管道','需求主要來自政府產業政策，人行以再貸款定向支持「新質生產力」,民間放款欲振乏力。貨幣政策變成財政政策的延伸。'],
+ ['4','通縮預期','需求不足使物價下滑，通縮預期讓資金偏好留在現金或低風險資產，借貸需求持續低迷。'],
+ ['5','資產負債表衰退','民間部門從追求報酬轉為優先償債。無論利率多低，傳導失靈。']];
+$('#flow').innerHTML=FL.map((f,i)=>`<button class="step ${i?'':'on'}" data-i="${i}"><b>STEP ${f[0]}</b><span>${f[1]}</span></button>`).join('');
+$('#flow-detail').textContent=FL[0][2];
+$$('#flow .step').forEach(s=>s.onclick=()=>{$$('#flow .step').forEach(x=>x.classList.toggle('on',x===s));$('#flow-detail').textContent=FL[s.dataset.i][2];});
+
+/* ---------- tax table ---------- */
+$('#tax-tbl').innerHTML='<tr><th>發布時間</th><th style="text-align:left">政策</th></tr>'+[
+ ['2025/6/20','互聯網平臺企業涉稅資訊報送規定'],['2025/7/16','住房租賃條例'],['2025/7/17','關於調整超豪華小汽車消費稅政策的公告'],
+ ['2025/7/31','關於國債等債券利息收入增值稅政策的公告'],['2025/7/31','關於境外投資者以分配利潤直接投資稅收抵免政策有關事項的公告'],
+ ['2025/8/11','關於明確快遞服務等增值稅政策的公告'],['2025/10/29','國家稅務總局關於黃金有關稅收徵管事項的公告']].map(r=>`<tr><td style="white-space:nowrap">${r[0]}</td><td style="text-align:left">${r[1]}</td></tr>`).join('');
+
+/* ---------- conflict tabs ---------- */
+const CF=[['突發性集體衝突','2025 年 7 月四川江油因女學生霸凌事件引發上萬人示威；1 月陝西蒲城職校學生墜樓亦引發萬人規模示威。這類抗爭多出現在三、四線小縣城，動機是對地方政府掩蓋案情的義憤，並要求還給家屬公道，不同於過去常見的經濟利益訴求。'],
+ ['孤狼式政治抗議','個人基於反共理念發動的抗議：4 月成都青年在高架橋懸掛反共標語、8 月重慶大學城以投影播放巨幅反共內容，以及各地頻繁出現的反共塗鴉。反映論述粗糙但範圍廣泛的反共意識。'],
+ ['暴力洩憤事件','2024 下半年起出現大量過去罕見的無差別攻擊事件，2025 年仍有 10 餘起進入公眾視野。另有針對特定官員的殺官事件。不帶政治訴求，是對生存機會縮減與社會不公的直接宣洩。'],
+ ['網路輿情','9 月男藝人于朦朧墜樓身亡事件，在嚴密封鎖下相關討論仍累積超過百億次閱覽，許多網民強調不是粉絲，而是對權貴濫權與司法不公不滿。其他還有法院助理白彬、實習醫生羅帥宇事件，以及權貴子女取得特殊資源的爭議。']];
+$('#conf-tabs').innerHTML=CF.map((c,i)=>`<button class="chip ${i?'':'on'}" data-i="${i}">${c[0]}</button>`).join('');
+$('#conf-panes').innerHTML=CF.map((c,i)=>`<div class="pane ${i?'':'on'}"><p>${c[1]}</p></div>`).join('');
+$$('#conf-tabs .chip').forEach(b=>b.onclick=()=>{$$('#conf-tabs .chip').forEach(x=>x.classList.toggle('on',x===b));$$('#conf-panes .pane').forEach((p,i)=>p.classList.toggle('on',i==b.dataset.i));});
+
+/* ---------- people table ---------- */
+const PPL={
+ 3:[['中央委員開除黨籍',['李尚福','李玉超']],['中央委員被查',[]],['中央委員辭職/免職失蹤',['秦剛']],['候補委員開除黨籍',['孫金明']],['候補委員被查',['李石松']],['候補委員應遞補未遞補',['丁興農']]],
+ 4:[['中央委員開除黨籍',['唐仁健','金湘軍','苗華','王春寧','何衛東','何宏軍','王秀斌','林向陽','秦樹桐','袁華智']],['中央委員被查',['藍天立','王莉霞','易會滿','張林']],['中央委員辭職/免職失蹤',['劉建超','金壯龍','雷凡培']],['候補委員開除黨籍',['楊發森','朱芝松','張鳳中','李石松']],['候補委員被查',['費東斌','吳勝華']],['候補委員應遞補未遞補',['王立岩','王抗平','王嘉毅','方永祥','方紅衛','石玉剛','石正露']]]};
+function renderPpl(k){$('#ppl').innerHTML=PPL[k].map(r=>`<div class="ppl-row"><div class="ty">${r[0]}</div><div class="nm"><span class="tag n">${r[1].length}</span>${r[1].map(n=>`<span class="tag">${n}</span>`).join('')||'<span class="tag">—</span>'}</div></div>`).join('');}
+renderPpl(4);
+$$('#ppl-chips .chip').forEach(b=>b.onclick=()=>{$$('#ppl-chips .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));renderPpl(b.dataset.p);});
+
+/* ---------- indicators ---------- */
+const IND=`中國經濟成長率預期|中國經濟成長實際值估計|社會消費品零售|商品房銷售額|規模以上工業企業產成品資金與產能利用率|城鎮固定資產投資|高科技製造業投資|外人直接投資與撤廠估計|貨物貿易（進出口）|各國對中貿易調查|高科技產品出口占比與出口平均價格|消費者物價指數|生產者物價指數|消費者信心指數|採購經理指數|規模以上工業增加值|服務業生產指數|撥備覆蓋率|資本適足率|貨幣市場利率|M1-M2 剪刀差|不良貸款總額|人民幣存放款|中國金融機構家數|股票回購股數統計與上證指數|商業銀行持有政府債務餘額|商業銀行公債佔資產總額比率|中國全國廣義財政收支|中國地方廣義財政收支|中國財政收入結構|中國財政支出結構|中國政府債務餘額（包含中央、地方、城投債）|中國隱藏性債務估計|G20 國家政府債務餘額、占 GDP 比、占財政收入比|新發債務項目與總額|新增財政政策相關法規|失業率：勞動人口及青年失業率|收入不平等：五等分收入變化|經濟信心：收入與就業的感受及信心指數|負債：消費貸款及個人房貸|家庭：結婚對數及新生兒數量|人口結構：老年人口比例與老年人口撫養比|社會保障：養老保險基金收支及結餘|社會穩定：社會抗爭事件統計|社會穩定：萬人以上突發性集體抗爭數量|高層政治：歷年中共中全會中央委員與候補委員缺席率|高層政治：中共中央委員、候補委員任內遭免職人數：18 大至 20 大|軍方人事：中共中央委員、候補委員並為解放軍將領者在任內遭免職人數|高層反腐：省部級以上幹部遭調查及處分人數|基層反腐：中共全國紀檢監察機關處分人員`.split('|');
+const DIM=[['經濟',0,17],['金融',17,27],['財政',27,36],['社會',36,45],['政治',45,50]];
+const dimOf=i=>DIM.findIndex(d=>i>=d[1]&&i<d[2]);
+let indD='all';
+$('#ind-chips').innerHTML=`<button class="chip" aria-pressed="true" data-d="all">全部 50</button>`+DIM.map((d,i)=>`<button class="chip" aria-pressed="false" data-d="${i}">${d[0]} ${d[2]-d[1]}</button>`).join('');
+function renderInd(){
+  const q=$('#ind-q').value.trim().toLowerCase();
+  const rows=IND.map((t,i)=>({t,i,d:dimOf(i)})).filter(x=>(indD==='all'||x.d==indD)&&(!q||x.t.toLowerCase().includes(q)||DIM[x.d][0].includes(q)));
+  $('#ind-list').innerHTML=rows.map(x=>`<li data-d="${x.d}"><span class="no">${x.i+1}</span><span>${x.t}</span><span class="tg">${DIM[x.d][0]}</span></li>`).join('');
+  $('#ind-count').textContent=`顯示 ${rows.length} / 50 項`;
+}
+renderInd();
+$('#ind-q').addEventListener('input',renderInd);
+$$('#ind-chips .chip').forEach(b=>b.onclick=()=>{indD=b.dataset.d;$$('#ind-chips .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));renderInd();});
+})();
+</script>
+</body>
+</html>
